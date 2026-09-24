@@ -1,0 +1,43 @@
+<div class="auth-container">
+  <h1>Create an account</h1>
+
+  <form (ngSubmit)="onSubmit()">
+    <label>
+      Full Name
+      <input type="text" name="fullName" [(ngModel)]="formData.fullName" required />
+    </label>
+
+    <label>
+      Email
+      <input type="email" name="email" [(ngModel)]="formData.email" required />
+    </label>
+
+    <label>
+      Phone Number
+      <input type="tel" name="phoneNumber" [(ngModel)]="formData.phoneNumber" required />
+    </label>
+
+    <label>
+      Password
+      <input type="password" name="password" [(ngModel)]="formData.password" required minlength="8" />
+    </label>
+
+    <label>
+      I am a
+      <select name="role" [(ngModel)]="formData.role">
+        <option value="Client">Client, looking to hire</option>
+        <option value="Freelancer">Freelancer, looking for work</option>
+      </select>
+    </label>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="isLoading()">
+      {{ isLoading() ? 'Creating account...' : 'Sign Up' }}
+    </button>
+  </form>
+
+  <p>Already have an account? <a routerLink="/login">Log in</a></p>
+</div>

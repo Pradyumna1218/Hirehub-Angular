@@ -1,0 +1,25 @@
+<div class="auth-container">
+  <h1>Log in</h1>
+
+  <form (ngSubmit)="onSubmit()">
+    <label>
+      Email
+      <input type="email" name="email" [(ngModel)]="formData.email" required />
+    </label>
+
+    <label>
+      Password
+      <input type="password" name="password" [(ngModel)]="formData.password" required />
+    </label>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="isLoading()">
+      {{ isLoading() ? 'Logging in...' : 'Log In' }}
+    </button>
+  </form>
+
+  <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+</div>
