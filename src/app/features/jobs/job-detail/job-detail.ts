@@ -6,7 +6,7 @@ import { JobService } from '../../../core/services/job';
 import { ProposalService } from '../../../core/services/proposal';
 import { AuthService } from '../../../core/services/auth';
 import { JobResponse } from '../../../core/models/job.models';
-import { ProposalCreateRequest } from '../../../core/models/proposal.models';
+import { ProposalCreateRequest, ProposalResponse } from '../../../core/models/proposal.models';
 
 @Component({
   selector: 'app-job-detail',
@@ -24,6 +24,10 @@ export class JobDetail implements OnInit {
   proposalError = signal<string | null>(null);
   proposalSubmitted = signal(false);
   isSubmittingProposal = signal(false);
+
+  jobProposals = signal<ProposalResponse[]>([]);
+  isOwner = signal(false);
+  actionError = signal<string | null>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -46,11 +50,24 @@ export class JobDetail implements OnInit {
       next: (job) => {
         this.job.set(job);
         this.isLoading.set(false);
+
+        const user = this.authService.currentUser();
+        if (user && user.role === 'Client' && user.fullName === job.clientName) {
+          this.isOwner.set(true);
+          this.loadProposals(id);
+        }
       },
       error: () => {
         this.notFound.set(true);
         this.isLoading.set(false);
       }
+    });
+  }
+
+  loadProposals(jobId: number): void {
+    this.proposalService.getForJob(jobId).subscribe({
+      next: (proposals) => this.jobProposals.set(proposals),
+      error: () => {} // If it fails (e.g. not the owner), simply show nothing
     });
   }
 
@@ -77,6 +94,31 @@ export class JobDetail implements OnInit {
         this.isSubmittingProposal.set(false);
         this.proposalError.set(err.error?.message ?? 'Failed to submit proposal.');
       }
+    });
+  }
+
+  acceptProposal(proposalId: number): void {
+    this.actionError.set(null);
+    this.proposalService.accept(proposalId).subscribe({
+      next: () => {
+        const id = this.job()?.id;
+        if (id) {
+          this.jobService.getById(id).subscribe(job => this.job.set(job));
+          this.loadProposals(id);
+        }
+      },
+      error: (err) => this.actionError.set(err.error?.message ?? 'Failed to accept proposal.')
+    });
+  }
+
+  rejectProposal(proposalId: number): void {
+    this.actionError.set(null);
+    this.proposalService.reject(proposalId).subscribe({
+      next: () => {
+        const id = this.job()?.id;
+        if (id) this.loadProposals(id);
+      },
+      error: (err) => this.actionError.set(err.error?.message ?? 'Failed to reject proposal.')
     });
   }
 }

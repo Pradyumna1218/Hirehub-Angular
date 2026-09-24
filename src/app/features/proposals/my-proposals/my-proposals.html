@@ -1,0 +1,19 @@
+<div class="my-proposals-page">
+  <h1>My Proposals</h1>
+
+  @if (isLoading()) {
+    <p>Loading...</p>
+  } @else if (proposals().length === 0) {
+    <p>You haven't submitted any proposals yet.</p>
+  } @else {
+    <div class="proposal-cards">
+      @for (p of proposals(); track p.id) {
+        <a [routerLink]="['/jobs', p.jobId]" class="proposal-card" [class]="p.status.toLowerCase()">
+          <h3>{{ p.jobTitle }}</h3>
+          <p>Your bid: ${{ p.proposedPrice }} • {{ p.deliveryDays }} days</p>
+          <span class="status-badge">{{ p.status }}</span>
+        </a>
+      }
+    </div>
+  }
+</div>

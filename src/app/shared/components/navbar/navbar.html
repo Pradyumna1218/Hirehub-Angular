@@ -7,12 +7,16 @@
     @if (authService.isLoggedIn()) {
       @if (authService.currentUser()?.role === 'Client') {
         <a routerLink="/jobs/new">Post a Job</a>
+        <a routerLink="/my-jobs">My Jobs</a>
+      }
+      @if (authService.currentUser()?.role === 'Freelancer') {
+        <a routerLink="/my-proposals">My Proposals</a>
       }
       <span class="welcome">Hi, {{ authService.currentUser()?.fullName }}</span>
       <button (click)="authService.logout()">Log Out</button>
-    } @else {
+      } @else {
       <a routerLink="/login">Log In</a>
       <a routerLink="/register">Sign Up</a>
-    }
+      }
   </div>
 </nav>

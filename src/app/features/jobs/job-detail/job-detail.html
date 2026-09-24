@@ -49,5 +49,36 @@
         }
       </div>
     }
+
+    @if (isOwner()) {
+      <div class="manage-proposals-section">
+        <h2>Proposals Received</h2>
+
+        @if (actionError()) {
+          <p class="error">{{ actionError() }}</p>
+        }
+
+        @if (jobProposals().length === 0) {
+          <p>No proposals yet.</p>
+        } @else {
+          @for (p of jobProposals(); track p.id) {
+            <div class="proposal-row" [class]="p.status.toLowerCase()">
+              <div>
+                <strong>{{ p.freelancerName }}</strong> — ${{ p.proposedPrice }}, {{ p.deliveryDays }} days
+                <p>{{ p.coverLetter }}</p>
+                <span class="status-badge">{{ p.status }}</span>
+              </div>
+
+              @if (p.status === 'Pending') {
+                <div class="proposal-actions">
+                  <button (click)="acceptProposal(p.id)">Accept</button>
+                  <button (click)="rejectProposal(p.id)">Reject</button>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
   }
 </div>
