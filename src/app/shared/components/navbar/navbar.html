@@ -12,11 +12,12 @@
       @if (authService.currentUser()?.role === 'Freelancer') {
         <a routerLink="/my-proposals">My Proposals</a>
       }
+      <a routerLink="/my-orders">My Orders</a>
       <span class="welcome">Hi, {{ authService.currentUser()?.fullName }}</span>
       <button (click)="authService.logout()">Log Out</button>
-      } @else {
+    } @else {
       <a routerLink="/login">Log In</a>
       <a routerLink="/register">Sign Up</a>
-      }
+    }
   </div>
 </nav>

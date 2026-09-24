@@ -8,6 +8,7 @@ import { MyJobs } from './features/jobs/my-jobs/my-jobs';
 import { MyProposals } from './features/proposals/my-proposals/my-proposals';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+import { MyOrders } from './features/orders/my-orders/my-orders';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'my-jobs', component: MyJobs, canActivate: [authGuard, roleGuard('Client')] },
   { path: 'my-proposals', component: MyProposals, canActivate: [authGuard, roleGuard('Freelancer')] },
   { path: 'jobs/:id', component: JobDetail },
-  { path: '', redirectTo: '/jobs', pathMatch: 'full' }
+  { path: '', redirectTo: '/jobs', pathMatch: 'full' },
+  { path: 'my-orders', component: MyOrders, canActivate: [authGuard] },
 ];

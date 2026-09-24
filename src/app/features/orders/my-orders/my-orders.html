@@ -1,0 +1,61 @@
+<div class="my-orders-page">
+  <h1>My Orders</h1>
+
+  @if (actionError()) {
+    <p class="error">{{ actionError() }}</p>
+  }
+
+  @if (isLoading()) {
+    <p>Loading...</p>
+  } @else if (orders().length === 0) {
+    <p>No orders yet.</p>
+  } @else {
+    <div class="order-cards">
+      @for (order of orders(); track order.id) {
+        <div class="order-card" [class]="order.status.toLowerCase()">
+          <h3>{{ order.jobTitle ?? order.serviceTitle }}</h3>
+          <p>{{ order.clientName }} ↔ {{ order.freelancerName }}</p>
+          <div class="order-meta">
+            <span>${{ order.totalAmount }}</span>
+            <span class="status-badge">{{ order.status }}</span>
+          </div>
+
+          <div class="order-actions">
+            @if (isFreelancer(order) && order.status === 'Pending') {
+              <button (click)="updateStatus(order.id, 'InProgress')">Start Work</button>
+            }
+            @if (isFreelancer(order) && order.status === 'InProgress') {
+              <button (click)="updateStatus(order.id, 'Delivered')">Mark as Delivered</button>
+            }
+
+            @if (isClient(order) && order.status === 'Delivered') {
+              <button (click)="updateStatus(order.id, 'Completed')">Accept Delivery</button>
+              <button (click)="updateStatus(order.id, 'InProgress')">Request Revision</button>
+            }
+
+            @if (isClient(order) && order.status === 'Completed' && !reviewedOrderIds().has(order.id)) {
+              @if (reviewingOrderId() === order.id) {
+                <div class="review-form">
+                  <label>
+                    Rating
+                    <select [(ngModel)]="reviewData.rating">
+                      <option [value]="5">5 - Excellent</option>
+                      <option [value]="4">4 - Good</option>
+                      <option [value]="3">3 - Okay</option>
+                      <option [value]="2">2 - Poor</option>
+                      <option [value]="1">1 - Terrible</option>
+                    </select>
+                  </label>
+                  <textarea [(ngModel)]="reviewData.comment" placeholder="Optional comment" rows="2"></textarea>
+                  <button (click)="submitReview(order.id)">Submit Review</button>
+                </div>
+              } @else {
+                <button (click)="openReviewForm(order.id)">Leave a Review</button>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
