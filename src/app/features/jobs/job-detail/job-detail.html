@@ -1,48 +1,62 @@
-<div class="job-detail-page">
+<div class="container py-5" style="max-width: 800px;">
   @if (isLoading()) {
-    <p>Loading...</p>
+    <p class="text-secondary">Loading...</p>
   } @else if (notFound()) {
-    <p>Job not found.</p>
+    <p class="text-secondary">Job not found.</p>
   } @else if (job(); as j) {
-    <h1>{{ j.title }}</h1>
-    <p class="meta">{{ j.categoryName }} • Posted by {{ j.clientName }}</p>
+    <div class="card p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <h1 class="fw-bold mb-0">{{ j.title }}</h1>
+        <span class="badge text-bg-primary">{{ j.status }}</span>
+      </div>
+      <p class="text-secondary mb-4">{{ j.categoryName }} • Posted by {{ j.clientName }}</p>
 
-    <p class="description">{{ j.description }}</p>
+      <p class="mb-4">{{ j.description }}</p>
 
-    <div class="details">
-      <div><strong>Budget:</strong> ${{ j.budget }}</div>
-      <div><strong>Deadline:</strong> {{ j.deadline | date }}</div>
-      <div><strong>Status:</strong> {{ j.status }}</div>
-      <div><strong>Proposals so far:</strong> {{ j.proposalCount }}</div>
+      <div class="row g-3 text-center border-top pt-3" style="border-color: #2a2a3d !important;">
+        <div class="col-6 col-md-3">
+          <div class="text-secondary small">Budget</div>
+          <div class="fw-semibold">${{ j.budget }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="text-secondary small">Deadline</div>
+          <div class="fw-semibold">{{ j.deadline | date }}</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="text-secondary small">Proposals</div>
+          <div class="fw-semibold">{{ j.proposalCount }}</div>
+        </div>
+      </div>
     </div>
 
     @if (authService.currentUser()?.role === 'Freelancer' && j.status === 'Open') {
-      <div class="proposal-section">
+      <div class="card p-4 mb-4">
         @if (proposalSubmitted()) {
-          <p class="success">Your proposal has been submitted!</p>
+          <div class="alert alert-success mb-0">Your proposal has been submitted!</div>
         } @else {
-          <h2>Submit a Proposal</h2>
+          <h2 class="h5 fw-bold mb-3">Submit a Proposal</h2>
           <form (ngSubmit)="submitProposal()">
-            <label>
-              Cover Letter
-              <textarea name="coverLetter" [(ngModel)]="proposalData.coverLetter" required rows="4"></textarea>
-            </label>
+            <div class="mb-3">
+              <label class="form-label">Cover Letter</label>
+              <textarea class="form-control" name="coverLetter" [(ngModel)]="proposalData.coverLetter" required rows="4"></textarea>
+            </div>
 
-            <label>
-              Your Price ($)
-              <input type="number" name="proposedPrice" [(ngModel)]="proposalData.proposedPrice" required min="1" />
-            </label>
-
-            <label>
-              Delivery Days
-              <input type="number" name="deliveryDays" [(ngModel)]="proposalData.deliveryDays" required min="1" />
-            </label>
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <label class="form-label">Your Price ($)</label>
+                <input type="number" class="form-control" name="proposedPrice" [(ngModel)]="proposalData.proposedPrice" required min="1" />
+              </div>
+              <div class="col-6">
+                <label class="form-label">Delivery Days</label>
+                <input type="number" class="form-control" name="deliveryDays" [(ngModel)]="proposalData.deliveryDays" required min="1" />
+              </div>
+            </div>
 
             @if (proposalError()) {
-              <p class="error">{{ proposalError() }}</p>
+              <div class="alert alert-danger py-2 small">{{ proposalError() }}</div>
             }
 
-            <button type="submit" [disabled]="isSubmittingProposal()">
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmittingProposal()">
               {{ isSubmittingProposal() ? 'Submitting...' : 'Submit Proposal' }}
             </button>
           </form>
@@ -51,28 +65,32 @@
     }
 
     @if (isOwner()) {
-      <div class="manage-proposals-section">
-        <h2>Proposals Received</h2>
+      <div class="card p-4">
+        <h2 class="h5 fw-bold mb-3">Proposals Received</h2>
 
         @if (actionError()) {
-          <p class="error">{{ actionError() }}</p>
+          <div class="alert alert-danger py-2 small">{{ actionError() }}</div>
         }
 
         @if (jobProposals().length === 0) {
-          <p>No proposals yet.</p>
+          <p class="text-secondary mb-0">No proposals yet.</p>
         } @else {
           @for (p of jobProposals(); track p.id) {
-            <div class="proposal-row" [class]="p.status.toLowerCase()">
+            <div class="d-flex justify-content-between align-items-start border-top pt-3 mt-3" style="border-color: #2a2a3d !important;">
               <div>
-                <strong>{{ p.freelancerName }}</strong> — ${{ p.proposedPrice }}, {{ p.deliveryDays }} days
-                <p>{{ p.coverLetter }}</p>
-                <span class="status-badge">{{ p.status }}</span>
+                <div class="fw-semibold">{{ p.freelancerName }} — ${{ p.proposedPrice }}, {{ p.deliveryDays }} days</div>
+                <p class="text-secondary small mb-1">{{ p.coverLetter }}</p>
+                <span class="badge" [class.text-bg-warning]="p.status === 'Pending'"
+                                     [class.text-bg-success]="p.status === 'Accepted'"
+                                     [class.text-bg-danger]="p.status === 'Rejected'">
+                  {{ p.status }}
+                </span>
               </div>
 
               @if (p.status === 'Pending') {
-                <div class="proposal-actions">
-                  <button (click)="acceptProposal(p.id)">Accept</button>
-                  <button (click)="rejectProposal(p.id)">Reject</button>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-success" (click)="acceptProposal(p.id)">Accept</button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="rejectProposal(p.id)">Reject</button>
                 </div>
               }
             </div>

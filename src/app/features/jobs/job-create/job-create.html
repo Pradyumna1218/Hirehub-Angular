@@ -1,33 +1,36 @@
-<div class="job-create-page">
-  <h1>Post a New Job</h1>
+<div class="container py-5 d-flex justify-content-center">
+  <div class="card p-4 p-md-5" style="max-width: 600px; width: 100%;">
+    <h1 class="fw-bold mb-4">Post a New Job</h1>
 
-  <form (ngSubmit)="onSubmit()">
-    <label>
-      Title
-      <input type="text" name="title" [(ngModel)]="formData.title" required />
-    </label>
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" name="title" [(ngModel)]="formData.title" required />
+      </div>
 
-    <label>
-      Description
-      <textarea name="description" [(ngModel)]="formData.description" required rows="5"></textarea>
-    </label>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" name="description" [(ngModel)]="formData.description" required rows="5"></textarea>
+      </div>
 
-    <label>
-      Budget ($)
-      <input type="number" name="budget" [(ngModel)]="formData.budget" required min="1" />
-    </label>
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label class="form-label">Budget ($)</label>
+          <input type="number" class="form-control" name="budget" [(ngModel)]="formData.budget" required min="1" />
+        </div>
+        <div class="col-6">
+          <label class="form-label">Deadline</label>
+          <input type="date" class="form-control" name="deadline" [(ngModel)]="formData.deadline" required />
+        </div>
+      </div>
 
-    <label>
-      Deadline
-      <input type="date" name="deadline" [(ngModel)]="formData.deadline" required />
-    </label>
+      @if (errorMessage()) {
+        <div class="alert alert-danger py-2 small">{{ errorMessage() }}</div>
+      }
 
-    @if (errorMessage()) {
-      <p class="error">{{ errorMessage() }}</p>
-    }
-
-    <button type="submit" [disabled]="isLoading()">
-      {{ isLoading() ? 'Posting...' : 'Post Job' }}
-    </button>
-  </form>
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading()">
+        {{ isLoading() ? 'Posting...' : 'Post Job' }}
+      </button>
+    </form>
+  </div>
 </div>

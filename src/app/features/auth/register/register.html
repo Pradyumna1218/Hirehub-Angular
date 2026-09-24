@@ -1,43 +1,47 @@
-<div class="auth-container">
-  <h1>Create an account</h1>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card p-4 p-md-5" style="max-width: 480px; width: 100%;">
+    <h1 class="fw-bold mb-4 text-center">Create an Account</h1>
 
-  <form (ngSubmit)="onSubmit()">
-    <label>
-      Full Name
-      <input type="text" name="fullName" [(ngModel)]="formData.fullName" required />
-    </label>
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" name="fullName" [(ngModel)]="formData.fullName" required />
+      </div>
 
-    <label>
-      Email
-      <input type="email" name="email" [(ngModel)]="formData.email" required />
-    </label>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" [(ngModel)]="formData.email" required />
+      </div>
 
-    <label>
-      Phone Number
-      <input type="tel" name="phoneNumber" [(ngModel)]="formData.phoneNumber" required />
-    </label>
+      <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" name="phoneNumber" [(ngModel)]="formData.phoneNumber" required />
+      </div>
 
-    <label>
-      Password
-      <input type="password" name="password" [(ngModel)]="formData.password" required minlength="8" />
-    </label>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" [(ngModel)]="formData.password" required minlength="8" />
+      </div>
 
-    <label>
-      I am a
-      <select name="role" [(ngModel)]="formData.role">
-        <option value="Client">Client, looking to hire</option>
-        <option value="Freelancer">Freelancer, looking for work</option>
-      </select>
-    </label>
+      <div class="mb-4">
+        <label class="form-label">I am a</label>
+        <select class="form-select" name="role" [(ngModel)]="formData.role">
+          <option value="Client">Client, looking to hire</option>
+          <option value="Freelancer">Freelancer, looking for work</option>
+        </select>
+      </div>
 
-    @if (errorMessage()) {
-      <p class="error">{{ errorMessage() }}</p>
-    }
+      @if (errorMessage()) {
+        <div class="alert alert-danger py-2 small">{{ errorMessage() }}</div>
+      }
 
-    <button type="submit" [disabled]="isLoading()">
-      {{ isLoading() ? 'Creating account...' : 'Sign Up' }}
-    </button>
-  </form>
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading()">
+        {{ isLoading() ? 'Creating account...' : 'Sign Up' }}
+      </button>
+    </form>
 
-  <p>Already have an account? <a routerLink="/login">Log in</a></p>
+    <p class="text-center text-secondary mt-3 mb-0">
+      Already have an account? <a routerLink="/login">Log in</a>
+    </p>
+  </div>
 </div>

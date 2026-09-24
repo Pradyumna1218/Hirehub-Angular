@@ -3,12 +3,12 @@ import { RouterLink } from '@angular/router';
 import { JobService } from '../../../core/services/job';
 import { JobResponse } from '../../../core/models/job.models';
 import { FormsModule } from '@angular/forms';
-
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-job-list',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, SlicePipe],
   templateUrl: './job-list.html',
   styleUrl: './job-list.scss'
 })

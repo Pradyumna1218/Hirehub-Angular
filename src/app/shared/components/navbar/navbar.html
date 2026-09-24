@@ -1,23 +1,28 @@
-<nav class="navbar">
-  <a routerLink="/" class="brand">Hirehub</a>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #0f0f1a; border-bottom: 1px solid #2a2a3d;">
+  <div class="container">
+    <a routerLink="/" class="navbar-brand fw-bold">
+      Hire<span class="text-primary">Hub</span>
+    </a>
 
-  <div class="nav-links">
-    <a routerLink="/jobs">Browse Jobs</a>
+    <div class="navbar-nav flex-row gap-3 ms-auto align-items-center">
+      <a routerLink="/jobs" class="nav-link">Browse Jobs</a>
 
-    @if (authService.isLoggedIn()) {
-      @if (authService.currentUser()?.role === 'Client') {
-        <a routerLink="/jobs/new">Post a Job</a>
-        <a routerLink="/my-jobs">My Jobs</a>
+      @if (authService.isLoggedIn()) {
+        @if (authService.currentUser()?.role === 'Client') {
+          <a routerLink="/jobs/new" class="nav-link">Post a Job</a>
+          <a routerLink="/my-jobs" class="nav-link">My Jobs</a>
+        }
+        @if (authService.currentUser()?.role === 'Freelancer') {
+          <a routerLink="/my-proposals" class="nav-link">My Proposals</a>
+        }
+        <a routerLink="/my-orders" class="nav-link">My Orders</a>
+
+        <span class="text-secondary small">Hi, {{ authService.currentUser()?.fullName }}</span>
+        <button (click)="authService.logout()" class="btn btn-outline-light btn-sm">Log Out</button>
+      } @else {
+        <a routerLink="/login" class="btn btn-outline-light btn-sm">Log In</a>
+        <a routerLink="/register" class="btn btn-primary btn-sm">Sign Up</a>
       }
-      @if (authService.currentUser()?.role === 'Freelancer') {
-        <a routerLink="/my-proposals">My Proposals</a>
-      }
-      <a routerLink="/my-orders">My Orders</a>
-      <span class="welcome">Hi, {{ authService.currentUser()?.fullName }}</span>
-      <button (click)="authService.logout()">Log Out</button>
-    } @else {
-      <a routerLink="/login">Log In</a>
-      <a routerLink="/register">Sign Up</a>
-    }
+    </div>
   </div>
 </nav>

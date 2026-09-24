@@ -1,32 +1,36 @@
-<div class="job-list-page">
-  <h1>Browse Jobs</h1>
+<div class="container py-5">
+  <h1 class="mb-4 fw-bold">Browse Jobs</h1>
 
-  <div class="search-bar">
+  <div class="input-group mb-4" style="max-width: 500px;">
     <input
       type="text"
+      class="form-control"
       placeholder="Search by title..."
       [(ngModel)]="searchTerm"
       (keyup.enter)="onSearch()"
     />
-    <button (click)="onSearch()">Search</button>
+    <button class="btn btn-primary" (click)="onSearch()">Search</button>
   </div>
 
   @if (isLoading()) {
-    <p>Loading jobs...</p>
+    <p class="text-secondary">Loading jobs...</p>
   } @else if (jobs().length === 0) {
-    <p>No jobs found.</p>
+    <p class="text-secondary">No jobs found.</p>
   } @else {
-    <div class="job-cards">
+    <div class="row g-4">
       @for (job of jobs(); track job.id) {
-        <a [routerLink]="['/jobs', job.id]" class="job-card">
-          <h3>{{ job.title }}</h3>
-          <p>{{ job.description }}</p>
-          <div class="job-meta">
-            <span>Budget: ${{ job.budget }}</span>
-            <span>{{ job.categoryName }}</span>
-            <span>{{ job.proposalCount }} proposals</span>
-          </div>
-        </a>
+        <div class="col-md-6 col-lg-4">
+          <a [routerLink]="['/jobs', job.id]" class="card h-100 text-decoration-none text-reset p-3">
+            <h5 class="fw-semibold">{{ job.title }}</h5>
+            <p class="text-secondary small mb-3" style="min-height: 3em;">
+              {{ job.description | slice:0:100 }}{{ job.description.length > 100 ? '...' : '' }}
+            </p>
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <span class="badge text-bg-primary">${{ job.budget }}</span>
+              <span class="text-secondary small">{{ job.proposalCount }} proposals</span>
+            </div>
+          </a>
+        </div>
       }
     </div>
   }

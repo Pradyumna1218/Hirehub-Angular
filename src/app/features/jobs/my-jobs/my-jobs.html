@@ -1,20 +1,22 @@
-<div class="my-jobs-page">
-  <h1>My Posted Jobs</h1>
+<div class="container py-5">
+  <h1 class="mb-4 fw-bold">My Posted Jobs</h1>
 
   @if (isLoading()) {
-    <p>Loading...</p>
+    <p class="text-secondary">Loading...</p>
   } @else if (jobs().length === 0) {
-    <p>You haven't posted any jobs yet.</p>
+    <p class="text-secondary">You haven't posted any jobs yet.</p>
   } @else {
-    <div class="job-cards">
+    <div class="row g-4">
       @for (job of jobs(); track job.id) {
-        <a [routerLink]="['/jobs', job.id]" class="job-card">
-          <h3>{{ job.title }}</h3>
-          <div class="job-meta">
-            <span>Status: {{ job.status }}</span>
-            <span>{{ job.proposalCount }} proposals</span>
-          </div>
-        </a>
+        <div class="col-md-6 col-lg-4">
+          <a [routerLink]="['/jobs', job.id]" class="card h-100 text-decoration-none text-reset p-3">
+            <h5 class="fw-semibold">{{ job.title }}</h5>
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <span class="badge text-bg-primary">{{ job.status }}</span>
+              <span class="text-secondary small">{{ job.proposalCount }} proposals</span>
+            </div>
+          </a>
+        </div>
       }
     </div>
   }

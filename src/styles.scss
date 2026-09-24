@@ -1,1 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
+@use "bootstrap/scss/bootstrap" with (
+  $primary: #7c3aed,
+  $secondary: #a855f7,
+  $success: #22d3ee,
+  $danger: #f43f5e,
+  $warning: #facc15,
+  $info: #38bdf8,
+  $body-bg: #0a0a12,
+  $body-color: #e4e4f0,
+  $dark: #13131f,
+  $light: #1f1f2e,
+  $border-color: #2a2a3d,
+  $link-color: #a855f7,
+  $link-hover-color: #7c3aed,
+  $font-family-sans-serif: ('Inter', system-ui, -apple-system, sans-serif)
+);
+
+$primary: #7c3aed;
+$dark: #13131f;
+$light: #1f1f2e;
+$border-color: #2a2a3d;
+$body-color: #e4e4f0;
+$body-bg: #0a0a12;
+$font-family-sans-serif: ('Inter', system-ui, -apple-system, sans-serif);
+
+body {
+  background:
+    radial-gradient(ellipse at top left, rgba(124, 58, 237, 0.15), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.1), transparent 50%),
+    $body-bg;
+  min-height: 100vh;
+  font-family: $font-family-sans-serif;
+}
+
+a {
+  transition: color 0.15s ease;
+}
+
+.btn-primary {
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+  border: none;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.8);
+}
+
+.card,
+.job-card,
+.proposal-card,
+.order-card {
+  background: $dark;
+  border: 1px solid $border-color;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover,
+.job-card:hover,
+.proposal-card:hover,
+.order-card:hover {
+  border-color: $primary;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.25);
+}
+
+.form-control,
+.form-select {
+  background-color: $light;
+  border-color: $border-color;
+  color: $body-color;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: $light;
+  color: $body-color;
+  border-color: $primary;
+  box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.25);
+}
+
+.badge.text-bg-primary {
+  background-color: $primary !important;
+}
