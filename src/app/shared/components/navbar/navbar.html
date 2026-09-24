@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <a routerLink="/" class="brand">Hirehub</a>
+
+  <div class="nav-links">
+    <a routerLink="/jobs">Browse Jobs</a>
+
+    @if (authService.isLoggedIn()) {
+      <span class="welcome">Hi, {{ authService.currentUser()?.fullName }}</span>
+      <button (click)="authService.logout()">Log Out</button>
+    } @else {
+      <a routerLink="/login">Log In</a>
+      <a routerLink="/register">Sign Up</a>
+    }
+  </div>
+</nav>

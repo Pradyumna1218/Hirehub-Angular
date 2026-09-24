@@ -1,0 +1,33 @@
+<div class="job-list-page">
+  <h1>Browse Jobs</h1>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Search by title..."
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="onSearch()"
+    />
+    <button (click)="onSearch()">Search</button>
+  </div>
+
+  @if (isLoading()) {
+    <p>Loading jobs...</p>
+  } @else if (jobs().length === 0) {
+    <p>No jobs found.</p>
+  } @else {
+    <div class="job-cards">
+      @for (job of jobs(); track job.id) {
+        <a [routerLink]="['/jobs', job.id]" class="job-card">
+          <h3>{{ job.title }}</h3>
+          <p>{{ job.description }}</p>
+          <div class="job-meta">
+            <span>Budget: ${{ job.budget }}</span>
+            <span>{{ job.categoryName }}</span>
+            <span>{{ job.proposalCount }} proposals</span>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</div>
