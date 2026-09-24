@@ -1,0 +1,33 @@
+<div class="job-create-page">
+  <h1>Post a New Job</h1>
+
+  <form (ngSubmit)="onSubmit()">
+    <label>
+      Title
+      <input type="text" name="title" [(ngModel)]="formData.title" required />
+    </label>
+
+    <label>
+      Description
+      <textarea name="description" [(ngModel)]="formData.description" required rows="5"></textarea>
+    </label>
+
+    <label>
+      Budget ($)
+      <input type="number" name="budget" [(ngModel)]="formData.budget" required min="1" />
+    </label>
+
+    <label>
+      Deadline
+      <input type="date" name="deadline" [(ngModel)]="formData.deadline" required />
+    </label>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="isLoading()">
+      {{ isLoading() ? 'Posting...' : 'Post Job' }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,53 @@
+<div class="job-detail-page">
+  @if (isLoading()) {
+    <p>Loading...</p>
+  } @else if (notFound()) {
+    <p>Job not found.</p>
+  } @else if (job(); as j) {
+    <h1>{{ j.title }}</h1>
+    <p class="meta">{{ j.categoryName }} • Posted by {{ j.clientName }}</p>
+
+    <p class="description">{{ j.description }}</p>
+
+    <div class="details">
+      <div><strong>Budget:</strong> ${{ j.budget }}</div>
+      <div><strong>Deadline:</strong> {{ j.deadline | date }}</div>
+      <div><strong>Status:</strong> {{ j.status }}</div>
+      <div><strong>Proposals so far:</strong> {{ j.proposalCount }}</div>
+    </div>
+
+    @if (authService.currentUser()?.role === 'Freelancer' && j.status === 'Open') {
+      <div class="proposal-section">
+        @if (proposalSubmitted()) {
+          <p class="success">Your proposal has been submitted!</p>
+        } @else {
+          <h2>Submit a Proposal</h2>
+          <form (ngSubmit)="submitProposal()">
+            <label>
+              Cover Letter
+              <textarea name="coverLetter" [(ngModel)]="proposalData.coverLetter" required rows="4"></textarea>
+            </label>
+
+            <label>
+              Your Price ($)
+              <input type="number" name="proposedPrice" [(ngModel)]="proposalData.proposedPrice" required min="1" />
+            </label>
+
+            <label>
+              Delivery Days
+              <input type="number" name="deliveryDays" [(ngModel)]="proposalData.deliveryDays" required min="1" />
+            </label>
+
+            @if (proposalError()) {
+              <p class="error">{{ proposalError() }}</p>
+            }
+
+            <button type="submit" [disabled]="isSubmittingProposal()">
+              {{ isSubmittingProposal() ? 'Submitting...' : 'Submit Proposal' }}
+            </button>
+          </form>
+        }
+      </div>
+    }
+  }
+</div>

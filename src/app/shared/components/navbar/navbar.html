@@ -5,6 +5,9 @@
     <a routerLink="/jobs">Browse Jobs</a>
 
     @if (authService.isLoggedIn()) {
+      @if (authService.currentUser()?.role === 'Client') {
+        <a routerLink="/jobs/new">Post a Job</a>
+      }
       <span class="welcome">Hi, {{ authService.currentUser()?.fullName }}</span>
       <button (click)="authService.logout()">Log Out</button>
     } @else {
