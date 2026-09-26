@@ -1,15 +1,24 @@
 <div class="container py-5">
   <h1 class="mb-4 fw-bold">Browse Jobs</h1>
 
-  <div class="input-group mb-4" style="max-width: 500px;">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Search by title..."
-      [(ngModel)]="searchTerm"
-      (keyup.enter)="onSearch()"
-    />
-    <button class="btn btn-primary" (click)="onSearch()">Search</button>
+  <div class="d-flex flex-wrap gap-3 mb-4">
+    <div class="input-group" style="max-width: 400px;">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by title..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+      />
+      <button class="btn btn-primary" (click)="onSearch()">Search</button>
+    </div>
+
+    <select class="form-select" style="max-width: 220px;" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
+      <option [ngValue]="null">All Categories</option>
+      @for (cat of categories(); track cat.id) {
+        <option [ngValue]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
   </div>
 
   @if (isLoading()) {

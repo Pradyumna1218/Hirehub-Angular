@@ -1,8 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { JobService } from '../../../core/services/job';
+import { CategoryService } from '../../../core/services/category';
 import { JobCreateRequest } from '../../../core/models/job.models';
+import { CategoryResponse } from '../../../core/models/category.models';
 
 @Component({
   selector: 'app-job-create',
@@ -11,19 +13,35 @@ import { JobCreateRequest } from '../../../core/models/job.models';
   templateUrl: './job-create.html',
   styleUrl: './job-create.scss'
 })
-export class JobCreate {
+export class JobCreate implements OnInit {
   formData: JobCreateRequest = {
     title: '',
     description: '',
     budget: 0,
     deadline: '',
-    categoryId: 1
+    categoryId: 0
   };
 
+  categories = signal<CategoryResponse[]>([]);
   errorMessage = signal<string | null>(null);
   isLoading = signal(false);
 
-  constructor(private jobService: JobService, private router: Router) {}
+  constructor(
+    private jobService: JobService,
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.categoryService.getAll().subscribe({
+      next: (categories) => {
+        this.categories.set(categories);
+        if (categories.length > 0) {
+          this.formData.categoryId = categories[0].id;
+        }
+      }
+    });
+  }
 
   onSubmit(): void {
     this.errorMessage.set(null);
