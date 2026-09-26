@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject, PLATFORM_ID} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -29,6 +30,8 @@ export class JobDetail implements OnInit {
   isOwner = signal(false);
   actionError = signal<string | null>(null);
 
+  private platformId = inject(PLATFORM_ID);
+
   constructor(
     private route: ActivatedRoute,
     private jobService: JobService,
@@ -37,6 +40,9 @@ export class JobDetail implements OnInit {
   ) {}
 
   ngOnInit(): void {
+     if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : null;
 

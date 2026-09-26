@@ -1,0 +1,47 @@
+<div class="hero-section d-flex align-items-center" style="min-height: 70vh;">
+  <div class="container text-center py-5">
+    <h1 class="display-4 fw-bold mb-3">
+      Find the right <span class="text-primary">freelancer</span>, fast.
+    </h1>
+    <p class="lead text-secondary mb-4 mx-auto" style="max-width: 600px;">
+      Hirehub connects clients with skilled freelancers across web development,
+      design, writing, and more. Post a job or find your next project in minutes.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a routerLink="/jobs" class="btn btn-primary btn-lg px-4">Browse Jobs</a>
+
+      @if (!authService.isLoggedIn()) {
+        <a routerLink="/register" class="btn btn-outline-light btn-lg px-4">Get Started</a>
+      } @else if (authService.currentUser()?.role === 'Client') {
+        <a routerLink="/jobs/new" class="btn btn-outline-light btn-lg px-4">Post a Job</a>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-4 text-center">
+    <div class="col-md-4">
+      <div class="card p-4 h-100">
+        <div class="fs-1 mb-2">📋</div>
+        <h3 class="h5 fw-bold">Post a Job</h3>
+        <p class="text-secondary small mb-0">Describe what you need, set your budget, and let freelancers come to you.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4 h-100">
+        <div class="fs-1 mb-2">🤝</div>
+        <h3 class="h5 fw-bold">Review Proposals</h3>
+        <p class="text-secondary small mb-0">Compare bids, read cover letters, and pick the right freelancer for the job.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-4 h-100">
+        <div class="fs-1 mb-2">⭐</div>
+        <h3 class="h5 fw-bold">Track & Review</h3>
+        <p class="text-secondary small mb-0">Follow work through to completion, then leave a review that builds trust.</p>
+      </div>
+    </div>
+  </div>
+</div>

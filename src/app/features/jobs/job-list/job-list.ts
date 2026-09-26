@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SlicePipe } from '@angular/common';
@@ -22,12 +23,18 @@ export class JobList implements OnInit {
   searchTerm = '';
   selectedCategoryId: number | null = null;
 
+  private platformId = inject(PLATFORM_ID);
+
   constructor(
     private jobService: JobService,
     private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip data fetching during server-side render
+    }
+
     this.categoryService.getAll().subscribe({
       next: (categories) => this.categories.set(categories)
     });

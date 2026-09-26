@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../../core/services/order';
 import { ReviewService } from '../../../core/services/review';
 import { AuthService } from '../../../core/services/auth';
 import { OrderResponse } from '../../../core/models/order.models';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-my-orders',
@@ -21,6 +22,8 @@ export class MyOrders implements OnInit {
   reviewData = { rating: 5, comment: '' };
   reviewedOrderIds = signal<Set<number>>(new Set());
 
+  private platformId = inject(PLATFORM_ID);
+
   constructor(
     private orderService: OrderService,
     private reviewService: ReviewService,
@@ -28,6 +31,10 @@ export class MyOrders implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+    
     this.loadOrders();
   }
 

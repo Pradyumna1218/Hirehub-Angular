@@ -7,17 +7,17 @@
   $info: #38bdf8,
   $body-bg: #0a0a12,
   $body-color: #e4e4f0,
-  $dark: #13131f,
-  $light: #1f1f2e,
   $border-color: #2a2a3d,
   $link-color: #a855f7,
   $link-hover-color: #7c3aed,
   $font-family-sans-serif: ('Inter', system-ui, -apple-system, sans-serif)
 );
 
+// Local-only variables for our own custom rules below.
+// These are OURS, not Bootstrap's, so they can't accidentally break a Bootstrap component.
 $primary: #7c3aed;
-$dark: #13131f;
-$light: #1f1f2e;
+$surface: #13131f;       // card backgrounds
+$surface-alt: #1f1f2e;   // input backgrounds
 $border-color: #2a2a3d;
 $body-color: #e4e4f0;
 $body-bg: #0a0a12;
@@ -49,7 +49,7 @@ a {
 .job-card,
 .proposal-card,
 .order-card {
-  background: $dark;
+  background: $surface;
   border: 1px solid $border-color;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -64,14 +64,14 @@ a {
 
 .form-control,
 .form-select {
-  background-color: $light;
+  background-color: $surface-alt;
   border-color: $border-color;
   color: $body-color;
 }
 
 .form-control:focus,
 .form-select:focus {
-  background-color: $light;
+  background-color: $surface-alt;
   color: $body-color;
   border-color: $primary;
   box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.25);
