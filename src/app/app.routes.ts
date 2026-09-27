@@ -26,5 +26,6 @@ export const routes: Routes = [
   { path: 'jobs/:id', component: JobDetail },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
   { path: 'freelancers/:id', component: FreelancerView },
+  { path: 'jobs/:id/edit', component: JobCreate, canActivate: [authGuard, roleGuard('Client')] },
   { path: '**', component: NotFound }
 ];

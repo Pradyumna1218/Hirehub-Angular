@@ -33,4 +33,11 @@ export class JobService {
   create(request: JobCreateRequest): Observable<JobResponse> {
     return this.http.post<JobResponse>(`${environment.apiUrl}/jobs`, request);
   }
+  update(id: number, request: JobCreateRequest): Observable<JobResponse> {
+    return this.http.put<JobResponse>(`${environment.apiUrl}/jobs/${id}`, request);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/jobs/${id}`);
+  }
 }

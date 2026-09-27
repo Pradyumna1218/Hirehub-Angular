@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { JobService } from '../../../core/services/job';
 import { CategoryService } from '../../../core/services/category';
 import { JobCreateRequest } from '../../../core/models/job.models';
@@ -26,26 +26,49 @@ export class JobCreate implements OnInit {
   categories = signal<CategoryResponse[]>([]);
   errorMessage = signal<string | null>(null);
   isLoading = signal(false);
+  editingJobId = signal<number | null>(null);
 
   private platformId = inject(PLATFORM_ID);
 
   constructor(
     private jobService: JobService,
     private categoryService: CategoryService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
     this.categoryService.getAll().subscribe({
       next: (categories) => {
         this.categories.set(categories);
-        if (categories.length > 0) {
+
+        const idParam = this.route.snapshot.paramMap.get('id');
+        if (idParam) {
+          const id = Number(idParam);
+          this.editingJobId.set(id);
+          this.loadExistingJob(id);
+        } else if (categories.length > 0) {
           this.formData.categoryId = categories[0].id;
         }
+      }
+    });
+  }
+
+  loadExistingJob(id: number): void {
+    this.jobService.getById(id).subscribe({
+      next: (job) => {
+        this.formData = {
+          title: job.title,
+          description: job.description,
+          budget: job.budget,
+          deadline: job.deadline.substring(0, 10), // format for <input type="date">
+          categoryId: this.categories().find(c => c.name === job.categoryName)?.id ?? 0
+        };
+      },
+      error: () => {
+        this.errorMessage.set('Could not load this job for editing.');
       }
     });
   }
@@ -54,14 +77,20 @@ export class JobCreate implements OnInit {
     this.errorMessage.set(null);
     this.isLoading.set(true);
 
-    this.jobService.create(this.formData).subscribe({
+    const editingId = this.editingJobId();
+
+    const request$ = editingId
+      ? this.jobService.update(editingId, this.formData)
+      : this.jobService.create(this.formData);
+
+    request$.subscribe({
       next: (job) => {
         this.isLoading.set(false);
         this.router.navigate(['/jobs', job.id]);
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message ?? 'Failed to post job.');
+        this.errorMessage.set(err.error?.message ?? 'Failed to save job.');
       }
     });
   }

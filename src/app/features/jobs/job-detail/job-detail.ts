@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { JobService } from '../../../core/services/job';
@@ -8,7 +8,7 @@ import { ProposalService } from '../../../core/services/proposal';
 import { AuthService } from '../../../core/services/auth';
 import { JobResponse } from '../../../core/models/job.models';
 import { ProposalCreateRequest, ProposalResponse } from '../../../core/models/proposal.models';
-import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-job-detail',
   standalone: true,
@@ -37,7 +37,8 @@ export class JobDetail implements OnInit {
     private route: ActivatedRoute,
     private jobService: JobService,
     private proposalService: ProposalService,
-    public authService: AuthService
+    public authService: AuthService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -145,4 +146,14 @@ export class JobDetail implements OnInit {
       error: (err) => this.actionError.set(err.error?.message ?? 'Failed to reject proposal.')
     });
   }
+  deleteJob(jobId: number): void {
+    if (!confirm('Are you sure you want to delete this job? This cannot be undone.')) {
+      return;
+    }
+
+    this.jobService.delete(jobId).subscribe({
+      next: () => this.router.navigate(['/my-jobs']),
+      error: (err) => this.actionError.set(err.error?.message ?? 'Failed to delete job.')
+    });
+}
 }
