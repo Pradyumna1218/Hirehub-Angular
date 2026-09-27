@@ -7,6 +7,7 @@ export interface ProposalResponse {
   deliveryDays: number;
   status: string;
   freelancerName: string;
+  freelancerProfileId: number;
   createdAt: string;
 }
 

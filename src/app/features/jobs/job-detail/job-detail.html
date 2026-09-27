@@ -85,7 +85,10 @@
           @for (p of jobProposals(); track p.id) {
             <div class="d-flex justify-content-between align-items-start border-top pt-3 mt-3" style="border-color: #2a2a3d !important;">
               <div>
-                <div class="fw-semibold">{{ p.freelancerName }} — ${{ p.proposedPrice }}, {{ p.deliveryDays }} days</div>
+                <div class="fw-semibold">
+                  <a [routerLink]="['/freelancers', p.freelancerProfileId]" class="text-reset">{{ p.freelancerName }}</a>
+                  — ${{ p.proposedPrice }}, {{ p.deliveryDays }} days
+                </div>
                 <p class="text-secondary small mb-1">{{ p.coverLetter }}</p>
                 <span class="badge"
                       [class.text-bg-warning]="p.status === 'Pending'"

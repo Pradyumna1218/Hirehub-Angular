@@ -27,3 +27,14 @@ export interface ClientProfileUpdateRequest {
   fullName: string;
   companyName: string | null;
 }
+
+export interface PublicFreelancerProfileResponse {
+  id: number;
+  fullName: string;
+  bio: string | null;
+  hourlyRate: number | null;
+  location: string | null;
+  portfolioUrl: string | null;
+  averageRating: number;
+  reviewCount: number;
+}

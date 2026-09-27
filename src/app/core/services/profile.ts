@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   FreelancerProfileResponse, FreelancerProfileUpdateRequest,
-  ClientProfileResponse, ClientProfileUpdateRequest
+  ClientProfileResponse, ClientProfileUpdateRequest,
+  PublicFreelancerProfileResponse
 } from '../models/profile.models';
 
 @Injectable({ providedIn: 'root' })
@@ -26,4 +27,8 @@ export class ProfileService {
   updateMyClientProfile(request: ClientProfileUpdateRequest): Observable<ClientProfileResponse> {
     return this.http.put<ClientProfileResponse>(`${environment.apiUrl}/profile/client/me`, request);
   }
+  getPublicFreelancerProfile(id: number): Observable<PublicFreelancerProfileResponse> {
+    return this.http.get<PublicFreelancerProfileResponse>(`${environment.apiUrl}/profile/freelancer/${id}`);
+  }
+
 }

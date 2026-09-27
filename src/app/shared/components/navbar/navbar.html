@@ -17,7 +17,38 @@
         }
         <a routerLink="/my-orders" class="nav-link">My Orders</a>
         <a routerLink="/profile" class="nav-link">My Profile</a>
+
         <span class="text-secondary small">Hi, {{ authService.currentUser()?.fullName }}</span>
+        @if (authService.isLoggedIn()) {
+ 
+
+      <div class="position-relative">
+        <button class="btn btn-outline-light btn-sm position-relative" (click)="toggleDropdown()">
+          🔔
+          @if (unreadCount() > 0) {
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ unreadCount() }}
+            </span>
+          }
+        </button>
+
+        @if (showDropdown()) {
+          <div class="card position-absolute end-0 mt-2 p-2" style="width: 320px; z-index: 1000;">
+                @if (notifications().length === 0) {
+                  <p class="text-secondary small mb-0 p-2">No notifications yet.</p>
+                } @else {
+                  @for (n of notifications(); track n.id) {
+                    <div class="p-2 border-bottom" style="border-color: #2a2a3d !important;">
+                      <div class="fw-semibold small">{{ n.title }}</div>
+                      <div class="text-secondary small">{{ n.message }}</div>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+
+        }
         <button (click)="authService.logout()" class="btn btn-outline-light btn-sm">Log Out</button>
       } @else {
         <a routerLink="/login" class="btn btn-outline-light btn-sm">Log In</a>

@@ -8,11 +8,11 @@ import { ProposalService } from '../../../core/services/proposal';
 import { AuthService } from '../../../core/services/auth';
 import { JobResponse } from '../../../core/models/job.models';
 import { ProposalCreateRequest, ProposalResponse } from '../../../core/models/proposal.models';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, RouterLink],
   templateUrl: './job-detail.html',
   styleUrl: './job-detail.scss'
 })
@@ -92,31 +92,34 @@ export class JobDetail implements OnInit {
   }
 
   submitProposal(): void {
-    const currentJob = this.job();
-    if (!currentJob) return;
+  const currentJob = this.job();
+  if (!currentJob) return;
 
-    this.proposalError.set(null);
-    this.isSubmittingProposal.set(true);
+  this.proposalError.set(null);
+  this.isSubmittingProposal.set(true);
 
-    const request: ProposalCreateRequest = {
-      jobId: currentJob.id,
-      coverLetter: this.proposalData.coverLetter,
-      proposedPrice: this.proposalData.proposedPrice,
-      deliveryDays: this.proposalData.deliveryDays
-    };
+  const request: ProposalCreateRequest = {
+    jobId: currentJob.id,
+    coverLetter: this.proposalData.coverLetter,
+    proposedPrice: this.proposalData.proposedPrice,
+    deliveryDays: this.proposalData.deliveryDays
+  };
 
-    this.proposalService.create(request).subscribe({
-      next: (proposal) => {
-        this.isSubmittingProposal.set(false);
-        this.proposalSubmitted.set(true);
-        this.myExistingProposal.set(proposal);
-      },
-      error: (err) => {
-        this.isSubmittingProposal.set(false);
-        this.proposalError.set(err.error?.message ?? 'Failed to submit proposal.');
-      }
-    });
-  }
+  this.proposalService.create(request).subscribe({
+    next: (proposal) => {
+      this.isSubmittingProposal.set(false);
+      this.proposalSubmitted.set(true);
+      this.myExistingProposal.set(proposal);
+
+      // Refresh the job so its proposalCount updates without a page reload
+      this.jobService.getById(currentJob.id).subscribe(job => this.job.set(job));
+    },
+    error: (err) => {
+      this.isSubmittingProposal.set(false);
+      this.proposalError.set(err.error?.message ?? 'Failed to submit proposal.');
+    }
+  });
+}
 
   acceptProposal(proposalId: number): void {
     this.actionError.set(null);

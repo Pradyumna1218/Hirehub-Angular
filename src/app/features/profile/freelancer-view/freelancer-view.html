@@ -1,0 +1,37 @@
+<div class="container py-5 d-flex justify-content-center">
+  @if (isLoading()) {
+    <p class="text-secondary">Loading...</p>
+  } @else if (notFound()) {
+    <p class="text-secondary">Freelancer not found.</p>
+  } @else if (profile(); as p) {
+    <div class="card p-4 p-md-5" style="max-width: 560px; width: 100%;">
+      <h1 class="fw-bold mb-1">{{ p.fullName }}</h1>
+      <p class="text-secondary mb-3">
+        ⭐ {{ p.averageRating }} ({{ p.reviewCount }} review{{ p.reviewCount === 1 ? '' : 's' }})
+      </p>
+
+      @if (p.bio) {
+        <p class="mb-3">{{ p.bio }}</p>
+      }
+
+      <div class="row g-3">
+        @if (p.hourlyRate) {
+          <div class="col-6">
+            <div class="text-secondary small">Hourly Rate</div>
+            <div class="fw-semibold">${{ p.hourlyRate }}/hr</div>
+          </div>
+        }
+        @if (p.location) {
+          <div class="col-6">
+            <div class="text-secondary small">Location</div>
+            <div class="fw-semibold">{{ p.location }}</div>
+          </div>
+        }
+      </div>
+
+      @if (p.portfolioUrl) {
+        <a [href]="p.portfolioUrl" target="_blank" class="btn btn-outline-light btn-sm mt-3">View Portfolio</a>
+      }
+    </div>
+  }
+</div>

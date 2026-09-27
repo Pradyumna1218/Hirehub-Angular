@@ -12,6 +12,7 @@ import { NotFound } from './features/not-found/not-found/not-found';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 import { Profile } from './features/profile/profile/profile';
+  import { FreelancerView } from './features/profile/freelancer-view/freelancer-view';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -24,5 +25,6 @@ export const routes: Routes = [
   { path: 'my-orders', component: MyOrders, canActivate: [authGuard] },
   { path: 'jobs/:id', component: JobDetail },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
+  { path: 'freelancers/:id', component: FreelancerView },
   { path: '**', component: NotFound }
 ];
