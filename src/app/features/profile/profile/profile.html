@@ -1,0 +1,56 @@
+<div class="container py-5 d-flex justify-content-center">
+  <div class="card p-4 p-md-5" style="max-width: 560px; width: 100%;">
+    <h1 class="fw-bold mb-4">My Profile</h1>
+
+    @if (isLoading()) {
+      <p class="text-secondary">Loading...</p>
+    } @else {
+      <p class="text-secondary small mb-4">{{ email }}</p>
+
+      @if (isFreelancer()) {
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" [(ngModel)]="freelancerData.fullName" name="fullName" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Bio</label>
+          <textarea class="form-control" [(ngModel)]="freelancerData.bio" name="bio" rows="3"></textarea>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label">Hourly Rate ($)</label>
+            <input type="number" class="form-control" [(ngModel)]="freelancerData.hourlyRate" name="hourlyRate" />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" [(ngModel)]="freelancerData.location" name="location" />
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Portfolio URL</label>
+          <input type="text" class="form-control" [(ngModel)]="freelancerData.portfolioUrl" name="portfolioUrl" />
+        </div>
+      } @else {
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-control" [(ngModel)]="clientData.fullName" name="fullName" />
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Company Name</label>
+          <input type="text" class="form-control" [(ngModel)]="clientData.companyName" name="companyName" />
+        </div>
+      }
+
+      @if (saveSuccess()) {
+        <div class="alert alert-success py-2 small">Profile updated!</div>
+      }
+      @if (errorMessage()) {
+        <div class="alert alert-danger py-2 small">{{ errorMessage() }}</div>
+      }
+
+      <button class="btn btn-primary w-100" (click)="save()" [disabled]="isSaving()">
+        {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+      </button>
+    }
+  </div>
+</div>

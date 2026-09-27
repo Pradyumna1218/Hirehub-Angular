@@ -30,6 +30,7 @@
       @for (job of jobs(); track job.id) {
         <div class="col-md-6 col-lg-4">
           <a [routerLink]="['/jobs', job.id]" class="card h-100 text-decoration-none text-reset p-3">
+            <span class="badge text-bg-secondary align-self-start mb-2">{{ job.categoryName }}</span>
             <h5 class="fw-semibold">{{ job.title }}</h5>
             <p class="text-secondary small mb-3" style="min-height: 3em;">
               {{ job.description | slice:0:100 }}{{ job.description.length > 100 ? '...' : '' }}

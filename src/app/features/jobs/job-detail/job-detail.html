@@ -31,8 +31,15 @@
 
     @if (authService.currentUser()?.role === 'Freelancer' && j.status === 'Open') {
       <div class="card p-4 mb-4">
-        @if (proposalSubmitted()) {
-          <div class="alert alert-success mb-0">Your proposal has been submitted!</div>
+        @if (myExistingProposal(); as existing) {
+          <h2 class="h5 fw-bold mb-2">Your Proposal</h2>
+          <p class="mb-2">You bid <strong>${{ existing.proposedPrice }}</strong>, {{ existing.deliveryDays }} days delivery.</p>
+          <span class="badge"
+                [class.text-bg-warning]="existing.status === 'Pending'"
+                [class.text-bg-success]="existing.status === 'Accepted'"
+                [class.text-bg-danger]="existing.status === 'Rejected'">
+            {{ existing.status }}
+          </span>
         } @else {
           <h2 class="h5 fw-bold mb-3">Submit a Proposal</h2>
           <form (ngSubmit)="submitProposal()">
@@ -80,9 +87,10 @@
               <div>
                 <div class="fw-semibold">{{ p.freelancerName }} — ${{ p.proposedPrice }}, {{ p.deliveryDays }} days</div>
                 <p class="text-secondary small mb-1">{{ p.coverLetter }}</p>
-                <span class="badge" [class.text-bg-warning]="p.status === 'Pending'"
-                                     [class.text-bg-success]="p.status === 'Accepted'"
-                                     [class.text-bg-danger]="p.status === 'Rejected'">
+                <span class="badge"
+                      [class.text-bg-warning]="p.status === 'Pending'"
+                      [class.text-bg-success]="p.status === 'Accepted'"
+                      [class.text-bg-danger]="p.status === 'Rejected'">
                   {{ p.status }}
                 </span>
               </div>

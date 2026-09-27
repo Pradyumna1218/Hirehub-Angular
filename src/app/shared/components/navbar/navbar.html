@@ -16,7 +16,7 @@
           <a routerLink="/my-proposals" class="nav-link">My Proposals</a>
         }
         <a routerLink="/my-orders" class="nav-link">My Orders</a>
-
+        <a routerLink="/profile" class="nav-link">My Profile</a>
         <span class="text-secondary small">Hi, {{ authService.currentUser()?.fullName }}</span>
         <button (click)="authService.logout()" class="btn btn-outline-light btn-sm">Log Out</button>
       } @else {

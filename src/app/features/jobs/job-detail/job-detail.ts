@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, PLATFORM_ID} from '@angular/core';
+import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -25,6 +25,7 @@ export class JobDetail implements OnInit {
   proposalError = signal<string | null>(null);
   proposalSubmitted = signal(false);
   isSubmittingProposal = signal(false);
+  myExistingProposal = signal<ProposalResponse | null>(null);
 
   jobProposals = signal<ProposalResponse[]>([]);
   isOwner = signal(false);
@@ -40,9 +41,8 @@ export class JobDetail implements OnInit {
   ) {}
 
   ngOnInit(): void {
-     if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : null;
 
@@ -58,9 +58,14 @@ export class JobDetail implements OnInit {
         this.isLoading.set(false);
 
         const user = this.authService.currentUser();
+
         if (user && user.role === 'Client' && user.fullName === job.clientName) {
           this.isOwner.set(true);
           this.loadProposals(id);
+        }
+
+        if (user && user.role === 'Freelancer') {
+          this.checkExistingProposal(id);
         }
       },
       error: () => {
@@ -70,10 +75,19 @@ export class JobDetail implements OnInit {
     });
   }
 
+  checkExistingProposal(jobId: number): void {
+    this.proposalService.getMine().subscribe({
+      next: (proposals) => {
+        const existing = proposals.find(p => p.jobId === jobId);
+        if (existing) this.myExistingProposal.set(existing);
+      }
+    });
+  }
+
   loadProposals(jobId: number): void {
     this.proposalService.getForJob(jobId).subscribe({
       next: (proposals) => this.jobProposals.set(proposals),
-      error: () => {} // If it fails (e.g. not the owner), simply show nothing
+      error: () => {}
     });
   }
 
@@ -92,9 +106,10 @@ export class JobDetail implements OnInit {
     };
 
     this.proposalService.create(request).subscribe({
-      next: () => {
+      next: (proposal) => {
         this.isSubmittingProposal.set(false);
         this.proposalSubmitted.set(true);
+        this.myExistingProposal.set(proposal);
       },
       error: (err) => {
         this.isSubmittingProposal.set(false);
