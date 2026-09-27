@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, signal, inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -34,7 +34,8 @@ export class JobCreate implements OnInit {
     private jobService: JobService,
     private categoryService: CategoryService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -59,13 +60,13 @@ export class JobCreate implements OnInit {
   loadExistingJob(id: number): void {
     this.jobService.getById(id).subscribe({
       next: (job) => {
-        this.formData = {
-          title: job.title,
-          description: job.description,
-          budget: job.budget,
-          deadline: job.deadline.substring(0, 10), // format for <input type="date">
-          categoryId: this.categories().find(c => c.name === job.categoryName)?.id ?? 0
-        };
+        this.formData.title = job.title;
+        this.formData.description = job.description;
+        this.formData.budget = job.budget;
+        this.formData.deadline = job.deadline.substring(0, 10);
+        this.formData.categoryId = this.categories().find(c => c.name === job.categoryName)?.id ?? 0;
+
+        this.cdr.detectChanges();
       },
       error: () => {
         this.errorMessage.set('Could not load this job for editing.');
