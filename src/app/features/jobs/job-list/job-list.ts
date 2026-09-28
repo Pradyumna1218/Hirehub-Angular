@@ -23,6 +23,10 @@ export class JobList implements OnInit {
   searchTerm = '';
   selectedCategoryId: number | null = null;
 
+  currentPage = signal(1);
+  totalPages = signal(1);
+  pageSize = 12;
+
   private platformId = inject(PLATFORM_ID);
 
   constructor(
@@ -31,9 +35,7 @@ export class JobList implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return; // Skip data fetching during server-side render
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
     this.categoryService.getAll().subscribe({
       next: (categories) => this.categories.set(categories)
@@ -47,11 +49,12 @@ export class JobList implements OnInit {
     this.jobService.getList({
       search: this.searchTerm,
       categoryId: this.selectedCategoryId ?? undefined,
-      pageNumber: 1,
-      pageSize: 20
+      pageNumber: this.currentPage(),
+      pageSize: this.pageSize
     }).subscribe({
       next: (result) => {
         this.jobs.set(result.items);
+        this.totalPages.set(result.totalPages);
         this.isLoading.set(false);
       },
       error: () => this.isLoading.set(false)
@@ -59,10 +62,18 @@ export class JobList implements OnInit {
   }
 
   onSearch(): void {
+    this.currentPage.set(1);
     this.loadJobs();
   }
 
   onCategoryChange(): void {
+    this.currentPage.set(1);
+    this.loadJobs();
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages()) return;
+    this.currentPage.set(page);
     this.loadJobs();
   }
 }
