@@ -2,25 +2,70 @@
   <div class="card p-4 p-md-5" style="max-width: 480px; width: 100%;">
     <h1 class="fw-bold mb-4 text-center">Create an Account</h1>
 
-    <form (ngSubmit)="onSubmit()">
+    <form #f="ngForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <label class="form-label">Full Name</label>
-        <input type="text" class="form-control" name="fullName" [(ngModel)]="formData.fullName" required />
+        <input
+          type="text"
+          class="form-control"
+          name="fullName"
+          #fullName="ngModel"
+          [(ngModel)]="formData.fullName"
+          required
+        />
+        @if (fullName.invalid && fullName.touched) {
+          <div class="text-danger small mt-1">Full name is required.</div>
+        }
       </div>
 
       <div class="mb-3">
         <label class="form-label">Email</label>
-        <input type="email" class="form-control" name="email" [(ngModel)]="formData.email" required />
+        <input
+          type="email"
+          class="form-control"
+          name="email"
+          #email="ngModel"
+          [(ngModel)]="formData.email"
+          required
+          email
+        />
+        @if (email.invalid && email.touched) {
+          <div class="text-danger small mt-1">Enter a valid email address.</div>
+        }
       </div>
 
       <div class="mb-3">
         <label class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" name="phoneNumber" [(ngModel)]="formData.phoneNumber" required />
+        <input
+          type="tel"
+          inputmode="numeric"
+          class="form-control"
+          name="phoneNumber"
+          #phone="ngModel"
+          [(ngModel)]="formData.phoneNumber"
+          required
+          pattern="^\+?[0-9]{7,15}$"
+          placeholder="9800000000"
+        />
+        @if (phone.invalid && phone.touched) {
+          <div class="text-danger small mt-1">Enter digits only (7 to 15), optionally starting with +.</div>
+        }
       </div>
 
       <div class="mb-3">
         <label class="form-label">Password</label>
-        <input type="password" class="form-control" name="password" [(ngModel)]="formData.password" required minlength="8" />
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          #password="ngModel"
+          [(ngModel)]="formData.password"
+          required
+          minlength="8"
+        />
+        @if (password.invalid && password.touched) {
+          <div class="text-danger small mt-1">Password must be at least 8 characters.</div>
+        }
       </div>
 
       <div class="mb-4">
@@ -35,7 +80,7 @@
         <div class="alert alert-danger py-2 small">{{ errorMessage() }}</div>
       }
 
-      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading()">
+      <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading() || f.invalid">
         {{ isLoading() ? 'Creating account...' : 'Sign Up' }}
       </button>
     </form>

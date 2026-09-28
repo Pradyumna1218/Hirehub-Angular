@@ -35,9 +35,14 @@ export class Register {
         this.router.navigate(['/']);
       },
       error: (err) => {
-        this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message ?? 'Registration failed. Please try again.');
-      }
+      this.isLoading.set(false);
+      const validationErrors: string[] = err.error?.errors
+        ? (Object.values(err.error.errors).flat() as string[])
+        : [];
+      this.errorMessage.set(
+        validationErrors[0] ?? err.error?.message ?? 'Registration failed. Please try again.'
+      );
+    }
     });
   }
 }
